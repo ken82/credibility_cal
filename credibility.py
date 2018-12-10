@@ -29,7 +29,7 @@ html_head = """
 <body>
 <header>
 <div id="header">
-<a href="./index.html">Credibility Calculation System</a></div>
+<a href="./index.html">Credibility Assessment System</a></div>
 </header><br><br><br><br>
 <h2>Result</h2><hr>
 """

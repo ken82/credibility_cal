@@ -20,7 +20,7 @@ def judge_lang(target):
     return("English")  # 含まれなければ英語
 
 # 正規表現によるテキストのクリーニング
-def clean_text(target):
+def clean_text(text):
     replaced_text = '\n'.join(s.strip() for s in text.splitlines()[2:] if s != '')  # skip header by [2:]
     replaced_text = replaced_text.lower()
     replaced_text = re.sub(r'[【】]', ' ', replaced_text)  # 【】の除去
@@ -29,7 +29,16 @@ def clean_text(target):
     replaced_text = re.sub(r'[@＠]\w+', '', replaced_text)  # メンションの除去
     replaced_text = re.sub(r'https?:\/\/.*?[\r\n ]', '', replaced_text)  # URLの除去
     replaced_text = re.sub(r'　', ' ', replaced_text)  # 全角空白の除去
+    replaced_text = re.sub(r'\n', ' ', replaced_text)  # 改行の除去
     return replaced_text
+    
+# 正規表現によるテキストのクリーニング(カスタム用)
+def cleansing(raw_data):
+    replaced_text = raw_data
+    replaced_text = re.sub(r'\n', ' ', replaced_text)  # 改行の除去
+    replaced_text = re.sub(r"(https?|ftp)(:\/\/[-_\.!~*\'()a-zA-Z0-9;\/?:\@&=\+\$,%#]+)", '', replaced_text)  # URLの除去
+    return replaced_text
+
 
 # URLを取り除く
 def clean_url(html_text):

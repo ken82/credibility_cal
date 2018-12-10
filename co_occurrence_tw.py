@@ -43,7 +43,9 @@ def cotw(target_i):
 # 取得した共起情報の日付とテキストを順次データベースへ格納
     for tweets in tweet:
         date = str(tweets.created_at)  # 取得したツイートのタイムスタンプを格納していく
-        tweets_data = tweets.text  # 取得したツイートのテキストを取得
+        #tweets_data = tweets.text
+        raw_data = tweets.text  # 取得したツイートのテキストを取得
+        tweets_data = preprocessing.cleansing(raw_data)  # 正規表現によるテキストのクリーニングのモジュールを実行
         dataset = [date, tweets_data]  # dbにいれるためにセットにする
         print(dataset)  # 抽出した共起情報を画面に表示する
         print("<br><br>")  # 見やすくするため改行
