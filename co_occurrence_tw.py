@@ -47,8 +47,8 @@ def cotw(target_i):
         raw_data = tweets.text  # 取得したツイートのテキストを取得
         tweets_data = preprocessing.cleansing(raw_data)  # 正規表現によるテキストのクリーニングのモジュールを実行
         dataset = [date, tweets_data]  # dbにいれるためにセットにする
-        print(dataset)  # 抽出した共起情報を画面に表示する
-        print("<br><br>")  # 見やすくするため改行
+        #print(dataset)  # 抽出した共起情報を画面に表示する
+        #print("<br><br>")  # 見やすくするため改行
         db.execute("insert into twitter_data (clock, data) values (?,?)", dataset)  # dbにinsert
 # データベースへの反映と接続解除
     db.commit()  # 変更をデータベースに保存
