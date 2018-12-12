@@ -36,7 +36,7 @@ def cotw(target_i):
         tweet = api.search(q+"exclude:retweets", count=100)  # RTを除外してツイートを取得
 
 # データベース操作
-    db = sqlite3.connect('./database/credibility.db')  # sqlite dbへ接続
+    db = sqlite3.connect('./database/credibility_assessment.db')  # sqlite dbへ接続
     db.execute("drop table twitter_data")  # 毎回dbをリセットするためにドロップ
     db.execute("create table twitter_data(id integer primary key, clock integer, data text)")  # dbを再構築
 
