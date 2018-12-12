@@ -10,16 +10,17 @@ import preprocessing
 ''' Intension Matrix(意図を分類するための二次元配列) 
 x軸=カテゴリ, y軸=意図
 Intension = [
-["", "Disaster(災害)", "Accident(事故)", "Terrorism(テロ)", "Medical(医療)", "Society(社会)", "Politics(政治)"],
-["Anxiety(不安)", 0, 0, 0, 0, 0, 0],
-["Disruption(分裂)",0, 0, 0, 0, 0, 0],
-["Publicity(宣伝)",0, 0, 0, 0, 0, 0],
-["Desire(願望)",0, 0, 0, 0, 0, 0],
-["Praise(賞賛)",0, 0, 0, 0, 0, 0],
-["Delight(愉快)",0, 0, 0, 0, 0, 0],
-["Obligation(義務)",0, 0, 0, 0, 0, 0],
-["Politics(政治)",0, 0, 0, 0, 0, 0],
-]'''
+["               ", "Disaster(災害)", "Accident(事故)", "Terrorism(テロ)", "Medical(医療)", "Society(社会)", "Politics(政治)"],
+["Anxiety(不安)   ",      0,                0,                0,                0,                0,                0],
+["Disruption(分裂)",      0,                0,                0,                0,                0,                0],
+["Publicity(宣伝) ",      0,                0,                0,                0,                0,                0],
+["Desire(願望)    ",      0,                0,                0,                0,                0,                0],
+["Praise(賞賛)    ",      0,                0,                0,                0,                0,                0],
+["Delight(愉快)   ",      0,                0,                0,                0,                0,                0],
+["Obligation(義務)",      0,                0,                0,                0,                0,                0],
+["Politics(政治)  ",      0,                0,                0,                0,                0,                0],
+]
+Intension Matrixの実態は上の形の行列だが実際には 0 のセルだけを作成'''
 
 target_i = input()  # 確認用
 def mng(target_i)
