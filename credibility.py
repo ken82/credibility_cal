@@ -6,7 +6,7 @@ import sys, io, os
 import cgi, cgitb
 import preprocessing
 import co_occurrence_tw
-#import mng
+import mng
 
 # cgi設定------------------------------------------------------------------------
 sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8')  # pythonのcgiで日本語が文字化けするのを防ぐ
@@ -78,20 +78,17 @@ print("<br><hr>")
 
 
 
-# ここからは信憑性に関する関数の実行----------------------------------------
+# ここからは評価に関する関数の実行---------------------------------------------------
 if excution_flag == 1:  # 英語の前処理でフラグが立ったので英語版の関数を実行
     print("We will excute credibility assessment.<br><hr>")
-    print("Co-occurrence information<br>")
-    print()
     print(co_occurrence_tw.cotw(target_i))  # 共起情報の収集関数を実行(ここではTwitterのみ)
-    #print(mng.mng())  #  Matrix Node Graphの生成
+    print(mng.mng(target_i))  #  Matrix Node Graphの生成
     #function(target_i)  # 過去のデータセットのMatrix Node Graphとの演算
 
 elif excution_flag == 2:  # 日本語の前処理でフラグが立ったので日本語版の関数を実行
     print("信憑性評価を行います．<br><hr>")
-    print("<ターゲット情報との共起情報><br>")
     print(co_occurrence_tw.cotw(target_i))  # 共起情報の収集関数を実行(ここではTwitterのみ)
-    #print(mng.mng())  #  Matrix Node Graphの生成
+    print(mng.mng(target_i))  #  Matrix Node Graphの生成
     #function(target_i)  # 過去のデータセットのMatrix Node Graphとの演算
 else:  # フラグが立っていないので何もしない
     print("※ Error：We cannot assess the credibility of this information. Because The value is invalid or the credibility of this information is low.<br>")
