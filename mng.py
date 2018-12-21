@@ -3,7 +3,7 @@
 # NLPによりMatrix Node Graphを生成する
 import os, sys
 import json
-import codecs
+import pprint
 import pandas
 import sklearn
 import sqlite3
@@ -11,17 +11,15 @@ import numpy as np
 import time, datetime
 import preprocessing
 # Intension Matrix(意図を分類するための二次元配列) 
-'''x軸=カテゴリ, y軸=意図
+'''x軸=意図, y軸=カテゴリ
 Intension = [
-["               ", "Disaster(災害)", "Accident(事故)", "Terrorism(テロ)", "Medical(医療)", "Society(社会)", "Politics(政治)"],
-["Anxiety(不安)   ",      0,                0,                0,                0,                0,                0],
-["Disruption(分裂)",      0,                0,                0,                0,                0,                0],
-["Publicity(宣伝) ",      0,                0,                0,                0,                0,                0],
-["Desire(願望)    ",      0,                0,                0,                0,                0,                0],
-["Praise(賞賛)    ",      0,                0,                0,                0,                0,                0],
-["Delight(愉快)   ",      0,                0,                0,                0,                0,                0],
-["Obligation(義務)",      0,                0,                0,                0,                0,                0],
-["Politics(政治)  ",      0,                0,                0,                0,                0,                0]
+[                "Anxiety(不安)", "agitation(扇動)", "Publicity(広告)", "Fun(愉快)", "Desire(願望)", "Admire(賞賛)","Obligation(義務)", "Politics(政治)"],
+["Disaster(災害) ",   0,               0,                0,               0,             0,             0,              0,                0],
+["Accident(事故) ",   0,               0,                0,               0,             0,             0,              0,                0],
+["Terrorism(テロ)",   0,               0,                0,               0,             0,             0,              0,                0],
+["Medical(医療)  ",   0,               0,                0,               0,             0,             0,              0,                0],
+["Society(社会)  ",   0,               0,                0,               0,             0,             0,              0,                0],
+["Politics(政治) ",   0,               0,                0,               0,             0,             0,              0,                0],
 ]
 Intension Matrixの実態は上の形の行列だが実際には 0 のセルだけを作成'''
 #target_i = input()  # 確認用
@@ -30,24 +28,20 @@ def mng(target_i):
     # ターゲット情報に対して意図分類を行いマトリクスを生成---------------------------------------------------------------------------
     # 上の行列と同じ構造を持つ意図分類マトリクスを生成
     target_intension = np.array([
-    [0,0,0,0,0,0],
-    [0,0,0,0,0,0],
-    [0,0,0,0,0,0],
-    [0,0,0,0,0,0],
-    [0,0,0,0,0,0],
-    [0,0,0,0,0,0],
-    [0,0,0,0,0,0],
-    [0,0,0,0,0,0]
-    ])
+    [0,0,0,0,0,0,0,0],
+    [0,0,0,0,0,0,0,0],
+    [0,0,0,0,0,0,0,0],
+    [0,0,0,0,0,0,0,0],
+    [0,0,0,0,0,0,0,0],
+    [0,0,0,0,0,0,0,0]])
  
     # NLPによりマトリクスへの分類-----------------------------------------------------------------------------------------------
-    # 辞書とのパターンマッチング
+    # 辞書とのパターンマッチング(もっともシンプルな方法を用いる)
     gazetteer_category = "./dict/category.json"  # カテゴリーに関するガゼッティア(固有表現辞書)
-    category = json.load(open(gazetteer_category))  # カテゴリーのjsonを開く
-    print(category)
+    category = json.load(open(gazetteer_category, encoding='utf-8'))  # カテゴリーのjsonを開く(日本語が含まれるのでエンコード)
     gazetteer_intension = "./dict/intension.json"  # 意図に関するガゼッティア
-    intension = json.load(open(gazetteer_intension))  # 意図のjsonを開く
-    print(intension)
+    intension = json.load(open(gazetteer_intension, encoding='utf-8'))  # 意図のjsonを開く
+    pprint.pprint(intension)
 
 
     '''
