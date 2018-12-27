@@ -76,8 +76,6 @@ else:
 print("<br><hr>")
 # 受け取ったデータの前処理はここまで
 
-
-
 # ここからは評価に関する関数の実行---------------------------------------------------
 if excution_flag == 1:  # 英語の前処理でフラグが立ったので英語版の関数を実行
     print("We will excute credibility assessment.<br><hr>")

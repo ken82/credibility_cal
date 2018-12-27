@@ -28,7 +28,7 @@ def mng(target_i):
     targets = target_i.split()  # ターゲット情報を空白で区切ってリストにする
     # ターゲット情報に対して意図分類を行いマトリクスを生成--------------------------------------------------------------------------
     # 上の行列と同じ構造を持つ意図分類マトリクスを生成
-    target_intension = np.array([
+    target_matrix = np.array([
     [0,0,0,0,0,0,0,0],
     [0,0,0,0,0,0,0,0],
     [0,0,0,0,0,0,0,0],
@@ -44,27 +44,143 @@ def mng(target_i):
     intension = json.load(open(dict_intension, encoding='utf-8'))  # 同じく意図のjsonを開く
     
     # パターンマッチング(カテゴリ)
-    category_match = {}  # パターンマッチの結果を格納するリスト
+    category_match = {}  # パターンマッチの結果を格納するリスト(辞書型)
     for categories in category.keys():  # カテゴリ名を取得
         category_text = list(category.get(categories))  # そのカテゴリ内の単語を取得
         category_type = set(category_text) & set(targets)  # カテゴリ内の単語とターゲット情報で一致するものを抽出
         category_count = len(list(category_type))  # set型になっているのでリストに変換しマッチした数を格納
         if category_count != 0:  # カテゴリとの一致数が0でなければ
             category_match.update({categories:category_count})  # 特定のカテゴリにマッチした数をそのカテゴリ名と共に格納
+    print("Category -> ")
     print(category_match)
-    print("<br><br><br>")
+    print("<br>")
+
     # パターンマッチング(意図)
-    intension_match = {}  # パターンマッチの結果を格納するリスト
+    intension_match = {}  # パターンマッチの結果を格納するリスト(辞書型)
     for intensions in intension.keys():  # 意図を取得
         intension_text = list(intension.get(intensions))  # その意図の単語を取得
         intension_type = set(intension_text) & set(targets)  # 意図の単語とターゲット情報で一致するものを抽出
         intension_count = len(list(intension_type))  # set型になっているのでリストに変換しマッチした数を格納
         if intension_count != 0:  # 意図との一致数が0でなければ
             intension_match.update({intensions:intension_count})  # 特定の意図にマッチした数をその意図名と共に格納
+    print("Intension -> ")
     print(intension_match)
-    '''
-    # db操作
-    db = sqlite3.connect('./database/credibility_assessment.db')  # dbへ接続
-    db.commit()  # 変更をデータベースに反映
-    db.close()  # データベースとの接続解除'''
+    print("<br><br><br>")
+
+    # パターンマッチングの結果をマトリクスに反映(ここから冗長なので一考の余地あり)
+    if "Disaster" in category_match.keys():  # もしカテゴリが"Disaster"なら
+        if "Anxiety" in intension_match.keys():  # そしてもし意図が"Anxiety"なら
+            target_matrix[0,0] = intension_match["Anxiety"]  # "DisasterカテゴリのAnxietyの値をパターンマッチから反映"
+        if "Agitation" in intension_match.keys():  # 意図が"Agitation"なら
+            target_matrix[0,1] = intension_match["Agitation"]  # "DisasterカテゴリのAgitaionの値をパターンマッチから反映"
+        if "Publicity" in intension_match.keys():  # 意図が"Publicity"なら
+            target_matrix[0,2] = intension_match["Publicity"]  # "DisasterカテゴリのPublicityの値をパターンマッチから反映"
+        if "Fun" in intension_match.keys():  # 意図が"Fun"なら
+            target_matrix[0,3] = intension_match["Fun"]  # "DisasterカテゴリのFunの値をパターンマッチから反映"
+        if "Desire" in intension_match.keys():  # 意図が"Desire"なら
+            target_matrix[0,4] = intension_match["Desire"]  # "DisasterカテゴリのDesireの値をパターンマッチから反映"
+        if "Admire" in intension_match.keys():  # 意図が"Admire"なら
+            target_matrix[0,5] = intension_match["Admire"]  # "DisasterカテゴリのAdmireの値をパターンマッチから反映"
+        if "Obligation" in intension_match.keys():  # 意図が"Obligation"なら
+            target_matrix[0,6] = intension_match["Obligation"]  # "DisasterカテゴリのObligationの値をパターンマッチから反映"
+        if "Politics" in intension_match.keys():  # 意図が"Admire"なら
+            target_matrix[0,7] = intension_match["Politics"]  # "DisasterカテゴリのPoliticsの値をパターンマッチから反映"    
+    
+    if "Accident" in category_match.keys():  # もしカテゴリが"Accident"なら
+        if "Anxiety" in intension_match.keys():
+            target_matrix[1,0] = intension_match["Anxiety"]
+        if "Agitation" in intension_match.keys():
+            target_matrix[1,1] = intension_match["Agitation"]
+        if "Publicity" in intension_match.keys():
+            target_matrix[1,2] = intension_match["Publicity"]
+        if "Fun" in intension_match.keys():
+            target_matrix[1,3] = intension_match["Fun"]
+        if "Desire" in intension_match.keys():
+            target_matrix[1,4] = intension_match["Desire"]
+        if "Admire" in intension_match.keys():
+            target_matrix[1,5] = intension_match["Admire"]
+        if "Obligation" in intension_match.keys():
+            target_matrix[1,6] = intension_match["Obligation"]
+        if "Politics" in intension_match.keys():
+            target_matrix[1,7] = intension_match["Politics"]
+
+    if "Terrorism" in category_match.keys():  # もしカテゴリが"Terrorism"なら
+        if "Anxiety" in intension_match.keys():
+            target_matrix[2,0] = intension_match["Anxiety"]
+        if "Agitation" in intension_match.keys():
+            target_matrix[2,1] = intension_match["Agitation"]
+        if "Publicity" in intension_match.keys():
+            target_matrix[2,2] = intension_match["Publicity"]
+        if "Fun" in intension_match.keys():
+            target_matrix[2,3] = intension_match["Fun"]
+        if "Desire" in intension_match.keys():
+            target_matrix[2,4] = intension_match["Desire"]
+        if "Admire" in intension_match.keys():
+            target_matrix[2,5] = intension_match["Admire"]
+        if "Obligation" in intension_match.keys():
+            target_matrix[2,6] = intension_match["Obligation"]
+        if "Politics" in intension_match.keys():
+            target_matrix[2,7] = intension_match["Politics"]
+        
+    if "Medical" in category_match.keys():  # もしカテゴリが"Medical"なら
+        if "Anxiety" in intension_match.keys():
+            target_matrix[3,0] = intension_match["Anxiety"]
+        if "Agitation" in intension_match.keys():
+            target_matrix[3,1] = intension_match["Agitation"]
+        if "Publicity" in intension_match.keys():
+            target_matrix[3,2] = intension_match["Publicity"]
+        if "Fun" in intension_match.keys():
+            target_matrix[3,3] = intension_match["Fun"]
+        if "Desire" in intension_match.keys():
+            target_matrix[3,4] = intension_match["Desire"]
+        if "Admire" in intension_match.keys():
+            target_matrix[3,5] = intension_match["Admire"]
+        if "Obligation" in intension_match.keys():
+            target_matrix[3,6] = intension_match["Obligation"]
+        if "Politics" in intension_match.keys():
+            target_matrix[3,7] = intension_match["Politics"]
+
+    if "Society" in category_match.keys():  # もしカテゴリが"Society"なら
+        if "Anxiety" in intension_match.keys():
+            target_matrix[4,0] = intension_match["Anxiety"]
+        if "Agitation" in intension_match.keys():
+            target_matrix[4,1] = intension_match["Agitation"]
+        if "Publicity" in intension_match.keys():
+            target_matrix[4,2] = intension_match["Publicity"]
+        if "Fun" in intension_match.keys():
+            target_matrix[4,3] = intension_match["Fun"]
+        if "Desire" in intension_match.keys():
+            target_matrix[4,4] = intension_match["Desire"]
+        if "Admire" in intension_match.keys():
+            target_matrix[4,5] = intension_match["Admire"]
+        if "Obligation" in intension_match.keys():
+            target_matrix[4,6] = intension_match["Obligation"]
+        if "Politics" in intension_match.keys():
+            target_matrix[4,7] = intension_match["Politics"]
+
+    if "Politics" in category_match.keys():  # もしカテゴリが"Politics"なら
+        if "Anxiety" in intension_match.keys():
+            target_matrix[5,0] = intension_match["Anxiety"]
+        if "Agitation" in intension_match.keys():
+            target_matrix[5,1] = intension_match["Agitation"]
+        if "Publicity" in intension_match.keys():
+            target_matrix[5,2] = intension_match["Publicity"]
+        if "Fun" in intension_match.keys():
+            target_matrix[5,3] = intension_match["Fun"]
+        if "Desire" in intension_match.keys():
+            target_matrix[5,4] = intension_match["Desire"]
+        if "Admire" in intension_match.keys():
+            target_matrix[5,5] = intension_match["Admire"]
+        if "Obligation" in intension_match.keys():
+            target_matrix[5,6] = intension_match["Obligation"]
+        if "Politics" in intension_match.keys():
+            target_matrix[5,7] = intension_match["Politics"]
+
+    # 結果のマトリクスを表示
+    print("Intension and Category Matrix<br>")
+    for result in target_matrix:
+        print(result)
+        print("<br>")
+    return "<br>"
+ 
 #mng(target_i)  # 確認用に実行
