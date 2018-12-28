@@ -4,10 +4,10 @@
 import os,sys,re
 import json
 import pprint
-import pandas
 import sklearn
 import sqlite3
 import numpy as np
+import pandas as pd
 import time, datetime
 import preprocessing
 # Intension Matrix(意図を分類するための二次元配列) 
@@ -36,7 +36,7 @@ def mng(target_i):
     [0,0,0,0,0,0,0,0],
     [0,0,0,0,0,0,0,0]])
  
-    # NLPによる意図マトリクスの分類-----------------------------------------------------------------------------------------------
+    # NLPによる意図マトリクスの生成-----------------------------------------------------------------------------------------------
     # 辞書(json)の取得と処理
     dict_category = "./dict/category.json"  # カテゴリに関する固有表現辞書(gazetteer:ガゼッティアとも言う)
     dict_intension = "./dict/intension.json"  # 同じく意図に関する辞書
@@ -176,11 +176,23 @@ def mng(target_i):
         if "Politics" in intension_match.keys():
             target_matrix[5,7] = intension_match["Politics"]
 
-    # 結果のマトリクスを表示
-    print("Intension and Category Matrix<br>")
-    for result in target_matrix:
+    # マトリクスの値の正規化--------------------------------------------------------------------------
+    # 各行に格納されている値をその合計値で割っていくことで行の合計が1になるようにする
+    def normalize(target_matrix):
+        normalize_row = []  # 正規化されたマトリクスを格納するための配列
+        for row in target_matrix:  # マトリクスの各行を順に取得
+            div = sum(row)  # その行に格納された値の合計値を取得
+            row_3 = [row_2 / div for row_2 in row]  # リスト内包表記を用いてマトリクスの各行内の要素を合計値で割っていく
+            normalize_row.append(row_3)  # 正規化した行をリストに追加していく
+        normalize_row = np.array(normalize_row)  # リストを配列に変換(下の関数を使うため)
+        normalize_row[np.isnan(normalize_row)]= 0  # 欠損値(nan)がある部分を0に変換
+        return normalize_row
+    normalize_matrix = normalize(target_matrix)  # ターゲット情報のマトリクスの正規化を実行
+
+    # 正規化したマトリクスの表示
+    print("Category/Intension Matrix<br>")
+    for result in normalize_matrix:  # データ構造を整形したいのでfor文で1行毎にCGI出力
         print(result)
         print("<br>")
     return "<br>"
- 
 #mng(target_i)  # 確認用に実行
