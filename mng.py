@@ -10,7 +10,7 @@ import numpy as np
 import pandas as pd
 import time, datetime
 import preprocessing
-# Intension Matrix(意図を分類するための二次元配列) 
+# Intension Matrix(意図を分類するための二次元配列)の生成-------------------------------------------------------------------------
 '''x軸=意図, y軸=カテゴリ
 Intension = [
 [                "Anxiety(不安)", "agitation(扇動)", "Publicity(広告)", "Fun(愉快)", "Desire(願望)", "Admire(賞賛)","Obligation(義務)", "Politics(政治)"],
@@ -22,10 +22,9 @@ Intension = [
 ["Politics(政治) ",   0,               0,                0,               0,             0,             0,              0,                0],
 ]
 Intension Matrixの実態は上の形の行列だが実際には 0 のセルだけを作成'''
-#target_i = input()  # 確認用
-def mng(target_i):
-    judge_result = (preprocessing.judge_lang(target_i))  # 言語判定モジュールを実行
-    targets = target_i.split()  # ターゲット情報を空白で区切ってリストにする
+def mngMatrix(sentence):
+    #judge_result = (preprocessing.judge_lang(sentence))  # 言語判定モジュールを実行
+    targets = sentence.split()  # ターゲット情報を空白で区切ってリストにする
     # ターゲット情報に対して意図分類を行いマトリクスを生成--------------------------------------------------------------------------
     # 上の行列と同じ構造を持つ意図分類マトリクスを生成
     target_matrix = np.array([
@@ -51,9 +50,6 @@ def mng(target_i):
         category_count = len(list(category_type))  # set型になっているのでリストに変換しマッチした数を格納
         if category_count != 0:  # カテゴリとの一致数が0でなければ
             category_match.update({categories:category_count})  # 特定のカテゴリにマッチした数をそのカテゴリ名と共に格納
-    print("Category -> ")
-    print(category_match)
-    print("<br>")
 
     # パターンマッチング(意図)
     intension_match = {}  # パターンマッチの結果を格納するリスト(辞書型)
@@ -63,9 +59,6 @@ def mng(target_i):
         intension_count = len(list(intension_type))  # set型になっているのでリストに変換しマッチした数を格納
         if intension_count != 0:  # 意図との一致数が0でなければ
             intension_match.update({intensions:intension_count})  # 特定の意図にマッチした数をその意図名と共に格納
-    print("Intension -> ")
-    print(intension_match)
-    print("<br><br><br>")
 
     # パターンマッチングの結果をマトリクスに反映(ここから冗長なので一考の余地あり)
     if "Disaster" in category_match.keys():  # もしカテゴリが"Disaster"なら
@@ -188,11 +181,6 @@ def mng(target_i):
         normalize_row[np.isnan(normalize_row)]= 0  # 欠損値(nan)がある部分を0に変換
         return normalize_row
     normalize_matrix = normalize(target_matrix)  # ターゲット情報のマトリクスの正規化を実行
+    return normalize_matrix, category_match, intension_match  # 正規化したマトリクスに加えカテゴリとintensionがなんだったのかもリターン
 
-    # 正規化したマトリクスの表示
-    print("Category/Intension Matrix<br>")
-    for result in normalize_matrix:  # データ構造を整形したいのでfor文で1行毎にCGI出力
-        print(result)
-        print("<br>")
-    return "<br>"
-#mng(target_i)  # 確認用に実行
+# Matrix Node Graphの生成----------------------------------------------------------------------------------

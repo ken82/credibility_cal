@@ -80,14 +80,35 @@ print("<br><hr>")
 if excution_flag == 1:  # 英語の前処理でフラグが立ったので英語版の関数を実行
     print("We will excute credibility assessment.<br><hr>")
     print(co_occurrence_tw.cotw(target_i))  # 共起情報の収集関数を実行(ここではTwitterのみ)
-    print(mng.mng(target_i))  #  Matrix Node Graphの生成
-    #function(target_i)  # 過去のデータセットのMatrix Node Graphとの演算
+    target_matrix, category, intension = mng.mngMatrix(target_i)  #  Matrix Node Graphのマトリクスを生成(カテゴリとintensionも)
+    # 取得したマトリクスを表示
+    print("The Intension Matrix<br>")
+    for result in target_matrix:
+        print(result)
+        print("<br>")
+    # カテゴリ表示
+    print("Category -> ")
+    print(category)
+    # 意図も表示
+    print("<br>Intension -> ")
+    print(intension)
 
 elif excution_flag == 2:  # 日本語の前処理でフラグが立ったので日本語版の関数を実行
     print("信憑性評価を行います．<br><hr>")
     print(co_occurrence_tw.cotw(target_i))  # 共起情報の収集関数を実行(ここではTwitterのみ)
-    print(mng.mng(target_i))  #  Matrix Node Graphの生成
-    #function(target_i)  # 過去のデータセットのMatrix Node Graphとの演算
+    target_matrix, category, intension = mng.mngMatrix(target_i)  #  Matrix Node Graphのマトリクスを生成(カテゴリとintensionも)
+    # 取得したマトリクスを表示
+    print("The Intension Matrix<br>")
+    for result in target_matrix:
+        print(result)
+        print("<br>")
+    # カテゴリ表示
+    print("Category -> ")
+    print(category)
+    # 意図も表示
+    print("<br>Intension -> ")
+    print(intension)
+    
 else:  # フラグが立っていないので何もしない
     print("※ Error：We cannot assess the credibility of this information. Because The value is invalid or the credibility of this information is low.<br>")
 

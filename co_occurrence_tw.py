@@ -1,6 +1,6 @@
 #!/usr/local/bin/python3
 #_*_coding:utf-8_*_
-#Twitterから情報収集．credibility_cal.pyで前処理したデータを受け取り実行．ターゲットの共起情報を抽出しデータベスに格納するプログラム
+# Twitterから共起情報収集．credibility_cal.pyで前処理したデータを受け取り実行．ターゲットの共起情報を抽出しデータベスに格納するプログラム
 import re
 import json
 import random
