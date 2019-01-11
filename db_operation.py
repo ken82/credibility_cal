@@ -15,9 +15,6 @@ import sqlite3
 # DB内の特定データの検索
 def search(table_name, keyword):
     db = sqlite3.connect('./database/credibility_assessment.db')  # DBに接続
-    sql = "select * from rumor_germanwings where data like '%" + keyword + "%'" # DB内を特定キーワードで検索
-    #db.execute(sql)  # SQLの実行
-    information = db.execute(sql)
-    db.commit()  # 変更をデータベースに保存
+    query = db.execute("select * from rumor_germanwings where data like ?",('%' + keyword + '%',))  # SQLの実行
+    return query
     db.close()  # データベースとの接続解除
-    return information

@@ -1,18 +1,21 @@
 #!/usr/local/bin/python3
 #_*_coding:utf-8_*_
 # NLPによりMatrix Node Graphを生成する
-import os,sys,re,json,time,datetime,random
+import os,sys,re,json,time,datetime, calendar
 import sklearn
 import sqlite3
 import numpy as np
 import pandas as pd
 import networkx as nx
+from pytz import timezone
+from dateutil import parser
 import matplotlib.pyplot as plt
 import db_operation
 
 # Intension Matrixの生成(意図を分類するための二次元配列)-------------------------------------------------------------------------
 def mngMatrix(sentence):
-    targets = sentence.split()  # ターゲット情報を空白で区切ってリストにする
+    target = sentence.lower()
+    targets = target.split()  # ターゲット情報を空白で区切ってリストにする
     '''x軸=意図, y軸=カテゴリ
     Intension = [
     [                "Anxiety(不安)", "agitation(扇動)", "Publicity(広告)", "Fun(愉快)", "Desire(願望)", "Admire(賞賛)","Obligation(義務)", "Politics(政治)"],
@@ -181,21 +184,26 @@ def mngMatrix(sentence):
     normalize_matrix = normalize(target_matrix)  # ターゲット情報のマトリクスの正規化を実行
     return normalize_matrix, category_match, intension_match  # 正規化したマトリクスに加えカテゴリとintensionがなんだったのかもリターン
 
-# ターゲット情報の類似情報のIntension Matrixを生成----------------------------------------------------------------------------------
-def mngCooccure():
-    # = db_operation.search("rumor-germanwings", "muslim")
+# Matrix Node Graphの生成-----------------------------------------------------------------------------------------------
+def mngGraph(matrixes):  # タイムスタンプとマトリクスのセットを受け取る
+    mng = []  # 結果を格納するリスト
+    for elements in matrixes.items():  # dictに入ったタイムスタンプとマトリクスのセットを一つずつ取り出し
+        element = list(elements)  # リストに変換
+        time = element[0]  # タイムスタンプの部分を取得
+        date = parser.parse(time).astimezone(timezone('Asia/Tokyo'))  # 表記を数字のみに変換
+        date = str(date).replace("+09:00","")  # 余計なものを取り除く
+        timestamp = datetime.datetime.strptime(date, '%Y-%m-%d %H:%M:%S')  # タイムスタンプ型に変換
+        print(timestamp)
+        print("<br><br>")
     return
+
+    # g = nx.DiGraph()  # 空の有向グラフを生成
+    # g.add_node("m1")
+    # g.add_edge("m1","m2")
 
 # Matrix間の類似度----------------------------------------------------------------------------------------------------
 def Sm():
     return
-
-# Matrix Node Graphの生成-----------------------------------------------------------------------------------------------
-def mngGraph(matrix):
-    g = nx.DiGraph()  # 空の有向グラフを生成
-    g.add_node("m1")
-    g.add_edge("m1","m2")
-    return graph
 
 # Graph間の類似度--------------------------------------------------------------------------------------------------------
 def Sg(g1,g2):
