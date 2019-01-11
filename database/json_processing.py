@@ -16,7 +16,9 @@ def data_processing(data_id):
     #         print(file_name)
 
 # jsonデータの処理
-    json_file = "./../dataset/germanwings-crash/rumours/" + data_id + "/reactions/" + data_id2 + ".json"  # JSONファイルのパスを指定(手動で入力する場合)
+    #json_file = "./../dataset/germanwings-crash/rumours/" + data_id + "/reactions/" + data_id2 + ".json"  # JSONファイルのパスを指定(手動で入力する場合)
+    json_file = "./../dataset/germanwings-crash/rumours/" + data_id + "/source-tweet/" + data_id + ".json"  # JSONファイルのパスを指定(手動で入力する場合)
+    #json_file = "./../dataset/germanwings-crash/rumours/" + "581546828954411008" + "/reactions/" + data_id2 + ".json"  # JSONファイルのパスを指定(手動で入力する場合)
     json_data = json.load(open(json_file))  # jsonファイルを開く
     json_time = json_data["created_at"]  # jsonデータ内の時間(created_at)を取得
     json_text = json_data["text"]  # jsonデータ内の本文を取得
@@ -25,7 +27,7 @@ def data_processing(data_id):
 
 # db操作
     db = sqlite3.connect('./credibility_assessment.db')  # dbへ接続
-    db.execute("insert into rumor_germanwings_all(time, data, source_id) values (?,?,?)", json_dataset)  # セットした json_dataset を db にinsert
+    db.execute("insert into rumor_germanwings(time, data, source_id) values (?,?,?)", json_dataset)  # セットした json_dataset を db にinsert
     db.commit()  # 変更をデータベースに保存
     db.close()  # データベースとの接続解除'''
 data_processing(data_id)

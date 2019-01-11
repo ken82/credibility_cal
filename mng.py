@@ -1,31 +1,29 @@
 #!/usr/local/bin/python3
 #_*_coding:utf-8_*_
 # NLPによりMatrix Node Graphを生成する
-import os,sys,re
-import json
-import pprint
+import os,sys,re,json,time,datetime,random
 import sklearn
 import sqlite3
 import numpy as np
 import pandas as pd
-import time, datetime
-import preprocessing
-# Intension Matrix(意図を分類するための二次元配列)の生成-------------------------------------------------------------------------
-'''x軸=意図, y軸=カテゴリ
-Intension = [
-[                "Anxiety(不安)", "agitation(扇動)", "Publicity(広告)", "Fun(愉快)", "Desire(願望)", "Admire(賞賛)","Obligation(義務)", "Politics(政治)"],
-["Disaster(災害) ",   0,               0,                0,               0,             0,             0,              0,                0],
-["Accident(事故) ",   0,               0,                0,               0,             0,             0,              0,                0],
-["Terrorism(テロ)",   0,               0,                0,               0,             0,             0,              0,                0],
-["Medical(医療)  ",   0,               0,                0,               0,             0,             0,              0,                0],
-["Society(社会)  ",   0,               0,                0,               0,             0,             0,              0,                0],
-["Politics(政治) ",   0,               0,                0,               0,             0,             0,              0,                0],
-]
-Intension Matrixの実態は上の形の行列だが実際には 0 のセルだけを作成'''
+import networkx as nx
+import matplotlib.pyplot as plt
+import db_operation
+
+# Intension Matrixの生成(意図を分類するための二次元配列)-------------------------------------------------------------------------
 def mngMatrix(sentence):
-    #judge_result = (preprocessing.judge_lang(sentence))  # 言語判定モジュールを実行
     targets = sentence.split()  # ターゲット情報を空白で区切ってリストにする
-    # ターゲット情報に対して意図分類を行いマトリクスを生成--------------------------------------------------------------------------
+    '''x軸=意図, y軸=カテゴリ
+    Intension = [
+    [                "Anxiety(不安)", "agitation(扇動)", "Publicity(広告)", "Fun(愉快)", "Desire(願望)", "Admire(賞賛)","Obligation(義務)", "Politics(政治)"],
+    ["Disaster(災害) ",   0,               0,                0,               0,             0,             0,              0,                0],
+    ["Accident(事故) ",   0,               0,                0,               0,             0,             0,              0,                0],
+    ["Terrorism(テロ)",   0,               0,                0,               0,             0,             0,              0,                0],
+    ["Medical(医療)  ",   0,               0,                0,               0,             0,             0,              0,                0],
+    ["Society(社会)  ",   0,               0,                0,               0,             0,             0,              0,                0],
+    ["Politics(政治) ",   0,               0,                0,               0,             0,             0,              0,                0],
+    ]
+    Intension Matrixの実態は上の形の行列だが実際には 0 のセルだけを作成'''
     # 上の行列と同じ構造を持つ意図分類マトリクスを生成
     target_matrix = np.array([
     [0,0,0,0,0,0,0,0],
@@ -34,8 +32,8 @@ def mngMatrix(sentence):
     [0,0,0,0,0,0,0,0],
     [0,0,0,0,0,0,0,0],
     [0,0,0,0,0,0,0,0]])
- 
-    # NLPによる意図マトリクスの生成-----------------------------------------------------------------------------------------------
+
+    # NLPによる意図マトリクスの生成
     # 辞書(json)の取得と処理
     dict_category = "./dict/category.json"  # カテゴリに関する固有表現辞書(gazetteer:ガゼッティアとも言う)
     dict_intension = "./dict/intension.json"  # 同じく意図に関する辞書
@@ -168,8 +166,8 @@ def mngMatrix(sentence):
             target_matrix[5,6] = intension_match["Obligation"]
         if "Politics" in intension_match.keys():
             target_matrix[5,7] = intension_match["Politics"]
-
-    # マトリクスの値の正規化--------------------------------------------------------------------------
+    
+    # マトリクスの値の正規化
     # 各行に格納されている値をその合計値で割っていくことで行の合計が1になるようにする
     def normalize(target_matrix):
         normalize_row = []  # 正規化されたマトリクスを格納するための配列
@@ -183,4 +181,23 @@ def mngMatrix(sentence):
     normalize_matrix = normalize(target_matrix)  # ターゲット情報のマトリクスの正規化を実行
     return normalize_matrix, category_match, intension_match  # 正規化したマトリクスに加えカテゴリとintensionがなんだったのかもリターン
 
-# Matrix Node Graphの生成----------------------------------------------------------------------------------
+# ターゲット情報の類似情報のIntension Matrixを生成----------------------------------------------------------------------------------
+def mngCooccure():
+    # = db_operation.search("rumor-germanwings", "muslim")
+    return
+
+# Matrix間の類似度----------------------------------------------------------------------------------------------------
+def Sm():
+    return
+
+# Matrix Node Graphの生成-----------------------------------------------------------------------------------------------
+def mngGraph(matrix):
+    g = nx.DiGraph()  # 空の有向グラフを生成
+    g.add_node("m1")
+    g.add_edge("m1","m2")
+    return graph
+
+# Graph間の類似度--------------------------------------------------------------------------------------------------------
+def Sg(g1,g2):
+    
+    return

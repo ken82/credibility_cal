@@ -6,6 +6,7 @@ import sys, io, os
 import cgi, cgitb
 import preprocessing
 import co_occurrence_tw
+import co_occurrence_db
 import mng
 
 # cgi設定------------------------------------------------------------------------
@@ -49,6 +50,7 @@ print("Key Word : ")
 
 # 英語版の処理-------------------------------------------------------------------
 if judge_result == "English":
+    target = target.lower()  # 英語は全て小文字に変換
     context_en_result = preprocessing.context_en(target)  # 形態素解析で英語のテキストを簡易的に文脈判断
     if context_en_result == 0:  # 0は伝聞推定ではない．
         #target_i = preprocessing.morpho_en(target)  # 形態素解析で英語文章の名詞・動詞(キーワード)を抽出
@@ -76,11 +78,14 @@ else:
 print("<br><hr>")
 # 受け取ったデータの前処理はここまで
 
-# ここからは評価に関する関数の実行---------------------------------------------------
+# Matrix Node Graphに関する関数の実行---------------------------------------------------------------------------------------
 if excution_flag == 1:  # 英語の前処理でフラグが立ったので英語版の関数を実行
     print("We will excute credibility assessment.<br><hr>")
     print(co_occurrence_tw.cotw(target_i))  # 共起情報の収集関数を実行(ここではTwitterのみ)
-    target_matrix, category, intension = mng.mngMatrix(target_i)  #  Matrix Node Graphのマトリクスを生成(カテゴリとintensionも)
+    # print(co_occurrence_db.codb(target_i))  # DBから共起情報を取得する(実験用)
+    
+    #  Matrix Node Graphのマトリクスを生成(カテゴリとintensionも)
+    target_matrix, category, intension = mng.mngMatrix(target_i)
     # 取得したマトリクスを表示
     print("The Intension Matrix<br>")
     for result in target_matrix:
@@ -96,7 +101,9 @@ if excution_flag == 1:  # 英語の前処理でフラグが立ったので英語
 elif excution_flag == 2:  # 日本語の前処理でフラグが立ったので日本語版の関数を実行
     print("信憑性評価を行います．<br><hr>")
     print(co_occurrence_tw.cotw(target_i))  # 共起情報の収集関数を実行(ここではTwitterのみ)
-    target_matrix, category, intension = mng.mngMatrix(target_i)  #  Matrix Node Graphのマトリクスを生成(カテゴリとintensionも)
+      
+    #  Matrix Node Graphのマトリクスを生成(カテゴリとintensionも)
+    target_matrix, category, intension = mng.mngMatrix(target_i)
     # 取得したマトリクスを表示
     print("The Intension Matrix<br>")
     for result in target_matrix:
@@ -108,6 +115,8 @@ elif excution_flag == 2:  # 日本語の前処理でフラグが立ったので�
     # 意図も表示
     print("<br>Intension -> ")
     print(intension)
+
+    # 共起情報のマトリクスを生成
     
 else:  # フラグが立っていないので何もしない
     print("※ Error：We cannot assess the credibility of this information. Because The value is invalid or the credibility of this information is low.<br>")
