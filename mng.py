@@ -184,23 +184,39 @@ def mngMatrix(sentence):
     normalize_matrix = normalize(target_matrix)  # ターゲット情報のマトリクスの正規化を実行
     return normalize_matrix, category_match, intension_match  # 正規化したマトリクスに加えカテゴリとintensionがなんだったのかもリターン
 
+
+
+
+
+
+
 # Matrix Node Graphの生成-----------------------------------------------------------------------------------------------
+"""
 def mngGraph(matrixes):  # タイムスタンプとマトリクスのセットを受け取る
-    mng = []  # 結果を格納するリスト
+    g = nx.DiGraph()  # 空の有向グラフを生成
+    mng_time = []  # 時間を格納するリスト(キューとして使う)
+    mng_value = []  # マトリクスを格納するリスト(キューとして使う)
+    nodeID = 1  # nodeの番号
+    counter = 1  # ループ数をカウント(1回目は1)
     for elements in matrixes.items():  # dictに入ったタイムスタンプとマトリクスのセットを一つずつ取り出し
         element = list(elements)  # リストに変換
         time = element[0]  # タイムスタンプの部分を取得
         date = parser.parse(time).astimezone(timezone('Asia/Tokyo'))  # 表記を数字のみに変換
         date = str(date).replace("+09:00","")  # 余計なものを取り除く
         timestamp = datetime.datetime.strptime(date, '%Y-%m-%d %H:%M:%S')  # タイムスタンプ型に変換
-        print(timestamp)
-        print("<br><br>")
+        value = element[1]  # 本文のマトリクスを取得
+        if counter == 1:  # ここは初めのループの時のみ実行
+            g.add_node(time)  # 時間をノードにする  
+            mng_time.append(timestamp)  # タイムスタンプを追加
+            mng_value.append(value)  # マトリクスを追加
+            #print(list(g.nodes()))
+        if counter > 2:
+            lag = timestamp - mng_time[0] 
+            print(lag)
+        counter += 1  # カウンターを増やす
+        nodeID += 1  # ノードIDを次へ        
     return
-
-    # g = nx.DiGraph()  # 空の有向グラフを生成
-    # g.add_node("m1")
-    # g.add_edge("m1","m2")
-
+"""
 # Matrix間の類似度----------------------------------------------------------------------------------------------------
 def Sm():
     return

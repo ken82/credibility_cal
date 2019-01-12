@@ -106,7 +106,9 @@ if excution_flag == 1:  # 英語の前処理でフラグが立ったので英語
     # 類似情報のマトリクスを取得
     print("The similar information of the target information.<br><br>")
     sim = []  # 類似情報を格納するためのリスト
+
     similar_information = db_operation.search("rumor_germanwings","muslim")  # db操作の関数を実行しdb内に格納されたデータを取得(テーブル名, キーワード)現在は決め打ち
+  
     for sim_info in similar_information:  # sqlite3のcursorオブジェクトとして入ってきたデータを一つずつ取り出し
         sim.append(sim_info)  # タプルとして追加
     sim = list(sim)  # リストに変換
@@ -129,8 +131,8 @@ if excution_flag == 1:  # 英語の前処理でフラグが立ったので英語
         print("<hr>")
 
     # Matrix Node Graphの生成
-    matrixNodeGraph = mng.mngGraph(intension_matrixes)  # dictにまとめたタイムスタンプとマトリクスを渡す
-    print(matrixNodeGraph)
+    # matrixNodeGraph = mng.mngGraph(intension_matrixes)  # dictにまとめたタイムスタンプとマトリクスを渡す
+    # print(matrixNodeGraph)
 
 
 
