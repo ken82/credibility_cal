@@ -1,9 +1,10 @@
 #!/usr/local/bin/python3
 #_*_coding:utf-8_*_
 # データの処理全般を行うためのプログラム(書き換えが必要)
-import os
+import os, re
 import json
 import sqlite3
+import subprocess
 
 # ディレクトリの操作
 def directory():
@@ -14,6 +15,7 @@ def directory():
             for file_name in files:  # 中のファイルを取得していく(全てstrなので実際のデータではない)
                 print(file_name)
     return "Success!"
+#directory()
 
 # jsonデータの処理
 def json_processing(file_name):
@@ -25,6 +27,22 @@ def json_processing(file_name):
     json_dataset = [json_time, json_text]  # 取得したjsonデータの時間と本文をセットにする
     print(json_dataset)
     return "Success!"
+#json_processing()
+
+# 指定したファイルを別のディレクトリに移動する
+def data_move():
+    for dir, subdir, files in os.walk("./dataset/rumors/ottawa_shooting"):  # ディレクトリを指定
+        if dir.find("/source-tweet") != -1:
+            dir_id = dir
+            dir_id = dir_id.replace("./dataset/rumors/ottawa_shooting/", "")  # strで取得しているので正規表現で不要な部分を削除
+            dir_id = dir_id.replace("/source-tweet", "")
+            file_name = dir_id+".json"  # ディレクトリ名をファイル名に
+            path = "./dataset/rumors/ottawa_shooting/"+dir_id+"/source-tweet/"+file_name  # 操作したいファイルまでのPATH
+            move_dir = "./dataset/rumors/ottawa_shooting/"  # 移動先ディレクトリ
+            cmd = ["mv", path, move_dir] # 実行する外部コマンド(subprocessはスペースを読み込めないのでリストで繋げる)
+            subprocess.call(cmd)  # 外部コマンド実行
+    return "Success!"
+#data_move()
 
 # db操作
 def json_to_db(json_dataset):
@@ -33,8 +51,9 @@ def json_to_db(json_dataset):
     db.commit()  # 変更をデータベースに保存
     db.close()  # データベースとの接続解除
     return "Success!"
+#json_to_db()
 
-# ディレクトリ内のjsonを取得して特定のデータを取り出す
+# ディレクトリ内のjsonを取得して特定のデータを取り出しdbに保存
 def dir_json_db():
     # 上の関数を組み合わせる
     for dir, subdir, files in os.walk("./dataset/rumors"):
