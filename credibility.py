@@ -79,8 +79,8 @@ else:
 print("<br><hr>")
 # 受け取ったデータの前処理はここまで
 
-# Matrix Node Graphに関する関数の実行---------------------------------------------------------------------------------------
-if excution_flag == 1:  # 英語の前処理でフラグが立ったので英語版の関数を実行
+# Matrix Node Graphに関する関数の実行----------------------------------------------
+if excution_flag == 1 or excution_flag == 2:  # 現在は英語の前処理でフラグが立っても日本語の前処理でフラグがたってもこの関数を実行する仕様になっている
     print("We will excute credibility assessment.<br><hr>")
     print(co_occurrence_tw.cotw(target_i))  # 共起情報の収集関数を実行(ここではTwitterのみ)
     # print(co_occurrence_db.codb(target_i))  # DBから共起情報を取得する(実験用)
@@ -107,8 +107,8 @@ if excution_flag == 1:  # 英語の前処理でフラグが立ったので英語
     print("The similar information of the target information.<br><br>")
     sim = []  # 類似情報を格納するためのリスト
     #similar_information = db_operation.search("rumor_germanwings","muslim")  # db操作の関数を実行しdb内に格納されたデータを取得(テーブル名, キーワード)現在は決め打ち
-    #similar_information = db_operation.search("rumor_ottawashooting","police")
-    similar_information = db_operation.search("rumor_sydneysiege","siege")
+    #similar_information = db_operation.search("rumor_ottawashooting","suspects")
+    similar_information = db_operation.search("rumor_sydneysiege","held hostage")
 
     for sim_info in similar_information:  # sqlite3のcursorオブジェクトとして入ってきたデータを一つずつ取り出し
         sim.append(sim_info)  # タプルとして追加
@@ -135,64 +135,6 @@ if excution_flag == 1:  # 英語の前処理でフラグが立ったので英語
     # matrixNodeGraph = mng.mngGraph(intension_matrixes)  # dictにまとめたタイムスタンプとマトリクスを渡す
     # print(matrixNodeGraph)
 
-
-
-
-# --------------------------------------------------------------------------------------------
-elif excution_flag == 2:  # 日本語の前処理でフラグが立ったので日本語版の関数を実行
-    print("信憑性評価を行います．<br><hr>")
-    print(co_occurrence_tw.cotw(target_i))  # 共起情報の収集関数を実行(ここではTwitterのみ)
-      
-    #  Intension Matrixを生成
-    intension_matrixes = {}  # ターゲット情報とその類似情報全てのマトリクスを格納すすためのdict
-    target_matrix, category, intension = mng.mngMatrix(target_i)
-    #intension_matrixes.setdefault("timestamp", target_matrix)  # マトリクス格納用dictに追加
-
-    # 取得したマトリクスを表示
-    print("The Intension Matrix<br>")
-    for result in target_matrix:
-        print(result)
-        print("<br>")
-    # カテゴリ表示
-    print("Category -> ")
-    print(category)
-    # 意図も表示
-    print("<br>Intension -> ")
-    print(intension)
-    print("<br><hr><br>")
-
-    # 類似情報のマトリクスを取得
-    print("The similar information of the target information.<br><br>")
-    sim = []  # 類似情報を格納するためのリスト
-    similar_information = db_operation.search("rumor_germanwings","muslim")  # db操作の関数を実行しdb内に格納されたデータを取得(テーブル名, キーワード)
-    #similar_information = db_operation.search("rumor_ottawashooting","police")
-    #similar_information = db_operation.search("rumor_sydneysiege","siege")
-    
-    for sim_info in similar_information:  # sqlite3のcursorオブジェクトとして入ってきたデータを一つずつ取り出し
-        sim.append(sim_info)  # タプルとして追加
-    sim = list(sim)  # リストに変換
-    for simdata in sim:  # データ一つずつ取り出す
-        print(simdata[2])  # 取り出したデータは二次元になっており[0]はid，[1]がタイムスタンプ，[2]が本文
-        print("<br><br>")
-        print(simdata[1])  # タイムスタンプも表示する
-        print("<br>")
-        # 本文の意図マトリクスを生成
-        simdata_matrix, simdata_category, simdata_intension = mng.mngMatrix(simdata[2])
-        intension_matrixes.setdefault(simdata[1], simdata_matrix)  # 取得したマトリクスをタイムスタンプと共にはまとめていく
-        for simmatrix in simdata_matrix:  # 配列のままだと見づらいので1つずつ
-            print(simmatrix)  # 表示
-            print("<br>")
-        print("Category -> ")
-        print(simdata_category)
-        print("<br>Intension -> ")
-        print(simdata_intension)
-        print("<br>")
-        print("<hr>")
-    
-    # Matrix Node Graphの生成
-    matrixNodeGraph = mng.Graph(intension_matrixes)  # dictにまとめたタイムスタンプとマトリクスを渡す
-
-# -------------------------------------------------------------------------------------------------------  
 else:  # フラグが立っていないので何もしない
     print("※ Error：We cannot assess the credibility of this information. Because The value is invalid or the credibility of this information is low.<br>")
 
