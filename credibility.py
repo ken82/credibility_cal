@@ -80,7 +80,8 @@ print("<br><hr>")
 # 受け取ったデータの前処理はここまで
 
 # Matrix Node Graphに関する関数の実行----------------------------------------------
-if excution_flag == 1 or excution_flag == 2:  # 現在は英語の前処理でフラグが立っても日本語の前処理でフラグがたってもこの関数を実行する仕様になっている
+# 現在は英語の前処理でフラグが立っても日本語の前処理でフラグがたってもこの関数を実行する仕様になっている
+if excution_flag == 1 or excution_flag == 2:
     print("We will excute credibility assessment.<br><hr>")
     print(co_occurrence_tw.cotw(target_i))  # 共起情報の収集関数を実行(ここではTwitterのみ)
     # print(co_occurrence_db.codb(target_i))  # DBから共起情報を取得する(実験用)
@@ -106,9 +107,9 @@ if excution_flag == 1 or excution_flag == 2:  # 現在は英語の前処理で�
     # 類似情報のマトリクスを取得
     print("The similar information of the target information.<br><br>")
     sim = []  # 類似情報を格納するためのリスト
-    #similar_information = db_operation.search("rumor_germanwings","muslim")  # db操作の関数を実行しdb内に格納されたデータを取得(テーブル名, キーワード)現在は決め打ち
+    similar_information = db_operation.search("rumor_germanwings","muslim")  # db操作の関数を実行しdb内に格納されたデータを取得(テーブル名, キーワード)現在は決め打ち
     #similar_information = db_operation.search("rumor_ottawashooting","suspects")
-    similar_information = db_operation.search("rumor_sydneysiege","held hostage")
+    #similar_information = db_operation.search("rumor_sydneysiege","held hostage")
 
     for sim_info in similar_information:  # sqlite3のcursorオブジェクトとして入ってきたデータを一つずつ取り出し
         sim.append(sim_info)  # タプルとして追加

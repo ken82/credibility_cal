@@ -12,7 +12,7 @@ from dateutil import parser
 import matplotlib.pyplot as plt
 import db_operation
 
-# Intension Matrixの生成(意図を分類するための二次元配列)-------------------------------------------------------------------------
+# Intension Matrix(意図を分類するための二次元配列)の生成-------------------------------------------------------------------------
 def mngMatrix(sentence):
     target = sentence.lower()
     targets = target.split()  # ターゲット情報を空白で区切ってリストにする
@@ -171,24 +171,21 @@ def mngMatrix(sentence):
             target_matrix[5,7] = intension_match["Politics"]
     
     # マトリクスの値の正規化
-    # 各行に格納されている値をその合計値で割っていくことで行の合計が1になるようにする
     def normalize(target_matrix):
-        normalize_row = []  # 正規化されたマトリクスを格納するための配列
-        for row in target_matrix:  # マトリクスの各行を順に取得
-            div = sum(row)  # その行に格納された値の合計値を取得
-            row_3 = [row_2 / div for row_2 in row]  # リスト内包表記を用いてマトリクスの各行内の要素を合計値で割っていく
-            normalize_row.append(row_3)  # 正規化した行をリストに追加していく
+        # 各要素の値をその合計値で割っていくことで行列の合計が1になるようにする
+        cells = []  # 行列の要素の合計値を格納するためのリスト
+        normalize_row = []  # 正規化されたマトリクスを格納するためのリスト
+        for rows in target_matrix:  # マトリクスの各行を順に取得
+            cells.append(sum(rows))  # 各行の合計値をリストに取得
+        cells = sum(cells)  # さらにその合計値を求める
+        for rows in target_matrix:  # もう一度マトリクスの各行を順に取得
+            row_2 = [row / cells for row in rows]  # リスト内包表記を用いてマトリクスの各行内の要素を合計値で割っていく
+            normalize_row.append(row_2)  # 正規化した行をリストに追加していく
         normalize_row = np.array(normalize_row)  # リストを配列に変換(下の関数を使うため)
         normalize_row[np.isnan(normalize_row)]= 0  # 欠損値(nan)がある部分を0に変換
         return normalize_row
     normalize_matrix = normalize(target_matrix)  # ターゲット情報のマトリクスの正規化を実行
     return normalize_matrix, category_match, intension_match  # 正規化したマトリクスに加えカテゴリとintensionがなんだったのかもリターン
-
-
-
-
-
-
 
 # Matrix Node Graphの生成-----------------------------------------------------------------------------------------------
 """
@@ -217,11 +214,17 @@ def mngGraph(matrixes):  # タイムスタンプとマトリクスのセット�
         nodeID += 1  # ノードIDを次へ        
     return
 """
-# Matrix間の類似度----------------------------------------------------------------------------------------------------
-def Sm():
-    return
+# Matrix間の距離(類似度)----------------------------------------------------------------------------------------------------
+def matrixDistance(m1, m2):  # 二つの行列を受け取る
+    mat_dist = []  # マトリクス間の距離計算用リスト
+    sub = m1 - m2  # 二つのマトリクスの差を求め
+    distance = list(map(lambda x: x**2, sub))  # その差を2乗
+    for dist in distance:  # 各行を取り出し
+        for d in dist:  # 各要素を抜き出し
+            mat_dist.append(d)  # 一つにまとめる
+    Dm = sum(mat_dist)
+    return Dm
 
-# Graph間の類似度--------------------------------------------------------------------------------------------------------
-def Sg(g1,g2):
-    
+# Graph間の距離(類似度)--------------------------------------------------------------------------------------------------------
+def graphDistance(g1,g2):  # 二つのグラフを受け取る
     return
