@@ -169,8 +169,8 @@ def mngMatrix(sentence):
             target_matrix[5,6] = intension_match["Obligation"]
         if "Politics" in intension_match.keys():
             target_matrix[5,7] = intension_match["Politics"]
-    
-    # マトリクスの値の正規化
+
+    # マトリクスの正規化
     def normalize(target_matrix):
         # 各要素の値をその合計値で割っていくことで行列の合計が1になるようにする
         cells = []  # 行列の要素の合計値を格納するためのリスト
@@ -188,32 +188,9 @@ def mngMatrix(sentence):
     return normalize_matrix, category_match, intension_match  # 正規化したマトリクスに加えカテゴリとintensionがなんだったのかもリターン
 
 # Matrix Node Graphの生成-----------------------------------------------------------------------------------------------
-"""
 def mngGraph(matrixes):  # タイムスタンプとマトリクスのセットを受け取る
-    g = nx.DiGraph()  # 空の有向グラフを生成
-    mng_time = []  # 時間を格納するリスト(キューとして使う)
-    mng_value = []  # マトリクスを格納するリスト(キューとして使う)
-    nodeID = 1  # nodeの番号
-    counter = 1  # ループ数をカウント(1回目は1)
-    for elements in matrixes.items():  # dictに入ったタイムスタンプとマトリクスのセットを一つずつ取り出し
-        element = list(elements)  # リストに変換
-        time = element[0]  # タイムスタンプの部分を取得
-        date = parser.parse(time).astimezone(timezone('Asia/Tokyo'))  # 表記を数字のみに変換
-        date = str(date).replace("+09:00","")  # 余計なものを取り除く
-        timestamp = datetime.datetime.strptime(date, '%Y-%m-%d %H:%M:%S')  # タイムスタンプ型に変換
-        value = element[1]  # 本文のマトリクスを取得
-        if counter == 1:  # ここは初めのループの時のみ実行
-            g.add_node(time)  # 時間をノードにする  
-            mng_time.append(timestamp)  # タイムスタンプを追加
-            mng_value.append(value)  # マトリクスを追加
-            #print(list(g.nodes()))
-        if counter > 2:
-            lag = timestamp - mng_time[0] 
-            print(lag)
-        counter += 1  # カウンターを増やす
-        nodeID += 1  # ノードIDを次へ        
     return
-"""
+
 # Matrix間の距離(類似度)----------------------------------------------------------------------------------------------------
 def matrixDistance(m1, m2):  # 二つの行列を受け取る
     mat_dist = []  # マトリクス間の距離計算用リスト
